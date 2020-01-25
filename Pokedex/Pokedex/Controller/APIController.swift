@@ -8,6 +8,8 @@
 
 import Foundation
 
+class APIController {
+
 private let baseUrl = URL(string: "https://pokeapi.co/docs/v2.html")!
 
 var pokemon: [Pokemon] = []
@@ -49,7 +51,7 @@ func searchForPokemonWith(searchTerm: String, completion: @escaping () -> Void) 
             let jsonDecoder = JSONDecoder()
             do {
                 let pokemonSearch = try jsonDecoder.decode(PokemonSearch.self, from: data)
-                pokemon = pokemonSearch.results
+                self.pokemon = pokemonSearch.results
             } catch {
                 print("Error: Unable to decode data into object of type [Pokemon]: \(error)")
             }
@@ -57,3 +59,4 @@ func searchForPokemonWith(searchTerm: String, completion: @escaping () -> Void) 
         }.resume()
     }
 
+}
