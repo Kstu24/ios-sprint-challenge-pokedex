@@ -21,35 +21,37 @@ class PokedexTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-
+    
+    
     // MARK: - Table view data source
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return pokedexController.pokemon.count
+        return pokedexController.chossenPokemon.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "pokemonCell", for: indexPath) as? PokemonTableViewCell else { return UITableViewCell() }
 
-        // Configure the cell...
+//        cell.pokedexController.chossenPokemon = pokedexController.savePokemon(pokemon: [indexPath.row])
+        
+        cell.pokemonLabel.text = pokedexController.chossenPokemon[indexPath.row].name
 
-        return cell
+         return cell
     }
 
     
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+
+        if segue.identifier == "PokemonSearchSegue" {
+            guard let pokedexVC = segue.destination as? PokedexTableViewController else { return }
+
+            pokedexVC.pokedexController = pokedexController
+        }
+
     }
     
 
