@@ -27,7 +27,7 @@ class PokedexTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return pokedexController.chossenPokemon.count
+        return pokedexController.pokemon.count
     }
 
     
@@ -36,7 +36,7 @@ class PokedexTableViewController: UITableViewController {
 
 //        cell.pokedexController.chossenPokemon = pokedexController.savePokemon(pokemon: [indexPath.row])
         
-        cell.pokemonLabel.text = pokedexController.chossenPokemon[indexPath.row].name
+        cell.pokemonLabel.text = pokedexController.pokemon[indexPath.row].name
 
          return cell
     }
@@ -47,12 +47,16 @@ class PokedexTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
         if segue.identifier == "PokemonSearchSegue" {
-            guard let pokedexVC = segue.destination as? PokedexTableViewController else { return }
+            guard let pokedexSearchVC = segue.destination as? PokedexTableViewController else { return }
 
-            pokedexVC.pokedexController = pokedexController
-        }
+            pokedexSearchVC.pokedexController = pokedexController
+        } else if segue.identifier == "PokemonDetailSegue" {
+        guard let pokedexDetailVC = segue.destination as? PokemonDetailViewController else { return }
+
+        pokedexDetailVC.pokedexController = pokedexController
 
     }
     
 
+    }
 }

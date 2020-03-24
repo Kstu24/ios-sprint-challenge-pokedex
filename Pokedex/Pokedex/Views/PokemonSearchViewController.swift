@@ -14,12 +14,16 @@ class PokemonSearchViewController: UIViewController {
     
     // MARK: - Properties
     private var apiController = APIController()
-    var pokemon: Pokemon?
+    var newPokemon: Pokemon? {
+        didSet {
+            updateViews()
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        searchBar.delegate = self
+        searchBar.delegate = self
+        updateViews()
 
         // Do any additional setup after loading the view.
     }
@@ -28,8 +32,6 @@ class PokemonSearchViewController: UIViewController {
     // MARK: - Outlets
     
     @IBOutlet var searchBar: UISearchBar!
-//    @IBOutlet var pokemonSearchSprite: SKView!
-
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var imageView: UIImageView!
     @IBOutlet var idLabel: UILabel!
@@ -42,23 +44,23 @@ class PokemonSearchViewController: UIViewController {
     
     // MARK: - Actions
     @IBAction func savePokemonTapped(_ sender: UIButton) {
-        guard let pokemon = pokemon else { return }
-        
-        
-        apiController.chossenPokemon.append(pokemon)
-        
+        guard let pokemon = newPokemon else { return }
+        apiController.pokemon.append(pokemon)
+        navigationController?.popViewController(animated: true)
     }
     
     
     // MARK: - Function
     
     func updateViews() {
-        if let pokemon = pokemon {
+        if let pokemon = newPokemon {
             nameLabel.text = pokemon.name
-            idLabel.text = String(pokemon.id)
-            typesLabel.text = pokemon.types
-            abilitiesLabel.text = pokemon.abilities
+            idLabel.text = "ID: \(pokemon.id)"
+            typesLabel.text = "Types: \(pokemon.type)"
+            abilitiesLabel.text = "Abilities: \(pokemon.abilities)"
             navigationItem.title = pokemon.name
+        } else {
+            return
         }
     }
     
@@ -80,16 +82,11 @@ extension PokemonSearchViewController: UISearchBarDelegate {
         guard let searchTerm = searchBar.text else { return }
         
         print("Searching for \(searchTerm)...")
-        apiController.gottaCatchemAll(searchTerm: searchTerm) { _ in DispatchQueue.main.async {
-            self.updateViews()
+        apiController.searchForPokemonDetails(searchTerm: searchTerm) {_ in 
+            DispatchQueue.main.async {
+                self.updateViews()
             }
         }
-//        apiController.searchForPokemonWith(searchTerm: searchTerm) {
-//            DispatchQueue.main.async {
-//                self.updateViews()
-//            }
-//        }
-            
-        }
+    }
 }
 

@@ -11,6 +11,7 @@ import UIKit
 class PokemonDetailViewController: UIViewController {
 
     var pokemon: Pokemon?
+    var pokedexController: APIController?
     
     
     override func viewDidLoad() {
@@ -35,9 +36,9 @@ class PokemonDetailViewController: UIViewController {
     func updateViews() {
         if let pokemon = pokemon {
             nameLabel.text = pokemon.name
-            idLabel.text = String(pokemon.id)
-            typesLabel.text = pokemon.types
-            abilitiesLabel.text = pokemon.abilities
+            idLabel.text = "ID: \(pokemon.id)"
+            typesLabel.text = "Types: \(pokemon.type)"
+            abilitiesLabel.text = "Abilities: \(pokemon.abilities)"
             navigationItem.title = pokemon.name
         }
     }

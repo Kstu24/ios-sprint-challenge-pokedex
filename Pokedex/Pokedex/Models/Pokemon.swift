@@ -12,29 +12,31 @@ struct PokemonSearch: Decodable {
     let results: [Pokemon]
 }
 
-
-struct Pokemon: Codable {
+struct Pokemon: Decodable {
     var name: String
     var id: Int
-    var abilities: String
+    var type: PokemonType
+    var abilities: PokemonAbility
+    var sprites: Sprites
     
-    struct Ability: Codable {
+    struct Ability: Decodable {
         var pokemonAbility: PokemonAbility
     }
-    struct PokemonAbility: Codable {
+    struct PokemonAbility: Decodable {
         var name: String
     }
-    var types: String
-    
-    struct Types: Codable {
+    struct Types: Decodable {
         var pokemonType: PokemonType
     }
-    struct PokemonType: Codable {
+    struct PokemonType: Decodable {
         var name: String
     }
     
-    var sprites: Sprites
-    struct Sprites: Codable {
-        var shiny: String
+    struct Sprites: Decodable {
+        var frontShiny: String
+        
+        enum CodingKeys: String, CodingKey {
+            case frontShiny = "front_shiny"
+        }
     }
 }
