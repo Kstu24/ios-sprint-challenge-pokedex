@@ -8,35 +8,36 @@
 
 import Foundation
 
-struct PokemonSearch: Decodable {
-    let results: [Pokemon]
-}
 
-struct Pokemon: Decodable {
+struct Pokemon: Codable, Equatable {
     var name: String
     var id: Int
-    var type: PokemonType
-    var abilities: PokemonAbility
-    var sprites: Sprites
+    var types: [TypeInfo]
+    var abilities: [AbilityInfo]
+    var sprites: PokemonSprites
     
-    struct Ability: Decodable {
-        var pokemonAbility: PokemonAbility
-    }
-    struct PokemonAbility: Decodable {
-        var name: String
-    }
-    struct Types: Decodable {
-        var pokemonType: PokemonType
-    }
-    struct PokemonType: Decodable {
-        var name: String
-    }
-    
-    struct Sprites: Decodable {
-        var frontShiny: String
+    struct AbilityInfo: Codable, Equatable {
+        var ability: Ability
         
+        struct Ability: Codable, Equatable {
+               var name: String
+           }
+    }
+   
+    struct TypeInfo: Codable, Equatable {
+        var type: TypieType
+        
+        struct TypieType: Codable, Equatable {
+            var name: String
+        }
+
+    }
+    
+    struct PokemonSprites: Codable,Equatable {
+        var frontShiny: String
+
         enum CodingKeys: String, CodingKey {
-            case frontShiny = "front_shiny"
+            case frontShiny = "front_default"
         }
     }
 }

@@ -10,50 +10,56 @@ import UIKit
 
 class PokedexTableViewController: UITableViewController {
     
-    private var pokedexController = APIController()
+    let apiController = APIController()
+    var pokemon: Pokemon! {
+        didSet {
+            tableView.reloadData()
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.reloadData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
     }
     
     
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return pokedexController.pokemon.count
+        return apiController.pokemonArray.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "pokemonCell", for: indexPath) as? PokemonTableViewCell else { return UITableViewCell() }
-
-//        cell.pokedexController.chossenPokemon = pokedexController.savePokemon(pokemon: [indexPath.row])
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell", for: indexPath)
         
-        cell.pokemonLabel.text = pokedexController.pokemon[indexPath.row].name
-
-         return cell
+        let pokemonCharacter = apiController.pokemonArray[indexPath.row]
+        cell.textLabel?.text = pokemonCharacter.name
+        return cell
     }
-
     
     // MARK: - Navigation
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
         if segue.identifier == "PokemonSearchSegue" {
-            guard let pokedexSearchVC = segue.destination as? PokedexTableViewController else { return }
-
-            pokedexSearchVC.pokedexController = pokedexController
+           if let pokemonSearchVC = segue.destination as? PokemonSearchDetailViewController {
+               pokemonSearchVC.apiController = apiController
+           }
         } else if segue.identifier == "PokemonDetailSegue" {
-        guard let pokedexDetailVC = segue.destination as? PokemonDetailViewController else { return }
-
-        pokedexDetailVC.pokedexController = pokedexController
+        guard let pokedexDetailVC = segue.destination as? PokemonSearchDetailViewController,
+        let indexPath = tableView.indexPathForSelectedRow else { return }
+        pokedexDetailVC.newPokemon = apiController.pokemonArray[indexPath.row]
+        pokedexDetailVC.apiController = apiController
+            
 
     }
     
